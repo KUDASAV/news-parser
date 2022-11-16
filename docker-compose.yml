@@ -1,0 +1,93 @@
+version: '3.8'
+ 
+services:
+    mysql:
+        image: mysql:5
+        restart: always
+        container_name: mysql
+        environment:
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - sql_data:/var/lib/mysql
+        networks: 
+            proxy:
+        ports:
+            - 3306:3306
+        expose: 
+            - 3306
+
+    rabbitmq:
+        container_name: rabbitmq
+        image: rabbitmq:management
+        ports:
+            - 15672:15672
+            - 5672:5672
+        volumes:
+            - rabbitdata:/var/lib/rabbitmq
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+
+        networks:
+            - proxy
+
+    news:
+        build: .
+        container_name: news
+        volumes:
+            - .:/var/www
+        ports:
+            - 9900:80
+        networks:
+            - proxy
+        depends_on:
+            - rabbitmq
+            - mysql
+
+    parser1:
+        build:
+            context: .
+            dockerfile: worker.dockerfile
+        container_name: parser1
+        command: bash -c "bin/console app:parse-feed"
+        volumes:
+            - .:/var/www
+        networks:
+            - proxy
+        depends_on:
+            - rabbitmq
+            - mysql
+
+    parser2:
+        build:
+            context: .
+            dockerfile: worker.dockerfile
+        container_name: parser2
+        command: bash -c "bin/console app:parse-feed"
+        volumes:
+            - .:/var/www
+        networks:
+            - proxy
+        depends_on:
+            - rabbitmq
+            - mysql
+
+    parser3:
+        build:
+            context: .
+            dockerfile: worker.dockerfile
+        container_name: parser3
+        command: bash -c "bin/console app:parse-feed"
+        volumes:
+            - .:/var/www
+        networks:
+            - proxy
+        depends_on:
+            - rabbitmq
+            - mysql
+
+networks:
+    proxy:
+        name: proxy

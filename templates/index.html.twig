@@ -1,0 +1,539 @@
+{% extends 'base.html.twig' %}
+
+
+{% block stylesheets %}
+<style>
+	body {
+		padding-top: 60px;
+	}
+
+	.justify-between {
+		justify-content: space-between
+	}
+
+	.navbar {
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		z-index: 102;
+		background-color: #fff;
+		height: 60px;
+		padding: 0;
+		transition: height .3s ease;
+	}
+
+	.articles {
+		padding-left: 240px;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.dropdown-menu {
+		left: auto !important;
+		right: 0 !important;
+		top: 120% !important
+	}
+
+	.navbar-toggler {
+		position: absolute;
+		right: 0;
+		top: 20%;
+		color: #007BFF;
+	}
+
+	.container-fluid {
+		position: relative;
+	}
+
+	.card {
+		border: none;
+	}
+
+	.card img {
+		height: 115px;
+		min-width: 200px;
+		max-width: 200px;
+	}
+
+	.card-title {
+		display: inline-block;
+		font-size: 16px;
+		letter-spacing: -0.04em;
+		line-height: 1.25em;
+		margin-bottom: 0.25rem;
+		margin-top: 0;
+		text-decoration: none;
+		width: 88%;
+		word-break: break-word;
+	}
+
+	.content {
+		display: flex;
+	}
+
+	.pagination {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.header-title {
+		color: #333;
+		font-size: 1.75rem;
+		letter-spacing: -0.04em;
+		line-height: 1.25em;
+		text-align: left;
+		text-transform: none;
+	}
+
+	.card-body {
+		padding-left: 1rem;
+		flex: 1 1 auto;
+		padding-right: 0;
+		padding-top: 0;
+
+	}
+
+	.nav-container {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+
+	.aside {
+		z-index: 95;
+		position: fixed;
+		top: 94px;
+		width: 240px;
+		left: 0;
+		height: 100vh;
+		border-right: 1px solid #e4e6ef;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+
+	.menu-item {
+		display: block;
+		padding: 0;
+	}
+
+	.menu-content {
+		margin-left: 3px;
+	}
+
+	.text-muted {
+		color: #a1a5b7 !important;
+	}
+
+	.menu-title {
+		font-size: 13px;
+	}
+
+	.menu-link {
+		border-radius: 4px;
+		border-left: 3px solid transparent;
+	}
+
+	.menu-link {
+		color: #5e6278;
+	}
+
+	.menu-link {
+		border-radius: 0.475rem;
+	}
+
+	.menu-link.active {
+		border-left: 3px solid #009ef7;
+		transition: color .2s ease, background-color .2s ease;
+		background-color: rgba(245, 248, 250, .8);
+	}
+
+	.menu-link {
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		padding: 0;
+		flex: 0 0 100%;
+		padding: 8px 1rem;
+		transition: none;
+		outline: 0 !important;
+	}
+
+	.menu-badge {
+		color: #a1a5b7;
+		font-weight: 500;
+		font-size: .9rem;
+	}
+
+	.menu-badge {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+		margin-left: 0.5rem;
+	}
+
+	.separator.separator-dashed {
+		border-bottom-style: dashed;
+		border-bottom-color: #e4e6ef;
+	}
+
+	.separator {
+		display: block;
+		height: 0;
+		border-bottom: 1px solid #eff2f5;
+	}
+
+	.border-gray-300 {
+		border-color: #e4e6ef !important;
+	}
+
+	.my-8 {
+		margin-top: 2rem !important;
+		margin-bottom: 2rem !important;
+	}
+
+	main {
+		padding-left: 40px;
+		padding-right: 40px;
+		margin-top: 2.5rem !important
+	}
+
+	.fs-7 {
+		font-size: 12px;
+	}
+
+	article {
+		flex-direction: row !important;
+	}
+
+	.mobile-nav {
+		visibility: hidden;
+		background-color: #fff;
+		z-index: 100;
+		padding: 10px;
+		position: absolute;
+		top: 60px;
+		width: 100vw;
+		left: -18px;
+	}
+
+	.deleteDialog {
+		cursor: pointer;
+	}
+
+	@media (max-width: 1024px) {
+		.aside {
+			display: none;
+		}
+
+		.mobile-nav {
+			visibility: initial;
+		}
+
+		.articles {
+			padding-left: 0;
+		}
+
+		.menu-badge {
+			font-size: 18px;
+		}
+
+		.menu-title {
+			font-size: 18px;
+		}
+	}
+
+	@media (max-width: 640px) {
+		article {
+			flex-direction: column !important;
+		}
+
+		.card-body {
+			padding-left: 0;
+			padding-top: 10px;
+			padding-bottom: 0
+		}
+
+		.card img {
+			height: auto;
+			min-width: 100%;
+			max-width: 300px;
+			padding-bottom: 7px;
+		}
+
+		main {
+			padding-left: 16px;
+			padding-right: 16px;
+			margin-top: 2.5rem !important
+		}
+
+		.shortDescription {
+			margin-top: 8px;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+<div class="navbar navbar-expand-lg shadow-sm px-3 d-flex flex-row" style="justify-content: space-between;">
+	<div class="container-fluid nav-container">
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav"
+			aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
+			<i class="fa fa-bars" aria-hidden="true"></i>
+		</button>
+		<div class="align-self: flex-start;">
+			<a href="#" class="navbar-brand">
+				<img src="/rss.png" width="40px" height="40px" alt="">
+			</a>
+		</div>
+		<div class="collapse navbar-collapse mobile-nav" id="mobileNav">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">All Topics</span>
+						<span class="menu-badge">21</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Business</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Culture</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Science</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Artificial Intelligence</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Business</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item">
+					<a href="#" class="nav-link menu-link d-flex flex-row justify-between">
+						<span class="menu-title">Business</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</li>
+				<li class="nav-item menu-item dropdown">
+					<a class="nav-link menu-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false">
+						{{user.username}}
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a class="dropdown-item" href="/logout">Logout</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="align-self-center" id="menu">
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ">
+
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							{{user.username}}
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="/logout">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+<div class="wrapper">
+	<main class="content">
+		<div class="aside">
+			<div class="flex-direction: column">
+				<div class="menu-item">
+					<div class="menu-content pb-2">
+						<span class="menu-section text-muted text-uppercase fs-7 fw-bolder">Topics</span>
+					</div>
+				</div>
+				<div class="menu-item">
+					<a href="#" class="menu-link active">
+						<span class="menu-title">All Topics</span>
+						<span class="menu-badge">{{count}}</span>
+					</a>
+				</div>
+				<div class="menu-item">
+					<a href="#" class="menu-link">
+						<span class="menu-title">Business</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</div>
+				<div class="menu-item">
+					<a href="#" class="menu-link">
+						<span class="menu-title">Culture</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</div>
+				<div class="menu-item">
+					<a href="#" class="menu-link">
+						<span class="menu-title">Science</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</div>
+				<div class="menu-item">
+					<a href="#" class="menu-link">
+						<span class="menu-title">Artificial Intelligence</span>
+						<span class="menu-badge">0</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="articles">
+			<div>
+				<header class="d-flex flex-row" style="justify-content: space-between; margin-bottom: 20px;">
+					<div class="d-flex align-items-center my-1">
+						<h1 class="header-title">Articles</h1>
+						<small class="text-muted fs-6 fw-bold ms-1"
+							style="font-size: 1.075rem !important;">({{count}})</small>
+					</div>
+					<div class="align-self-center" style="margin-left: 15px">
+						<form>
+							<input class="form-control me-2" type="search" placeholder="Search articles"
+								aria-label="Search">
+						</form>
+					</div>
+				</header>
+			</div>
+
+			<section>
+				<div class="row">
+					{% for article in articles %}
+						<article class="card flex">
+							<div>
+								<img src="{{ article.picture }}" class="img-fluid rounded-start" alt="">
+							</div>
+							<div class="d-flex flex-row" style="justify-content: space-between; width: 100%;">
+								<div class="card-body">
+									<h5 class="card-title">{{ article.title }}</h5>
+									<p class="card-text" style="margin: 0;"><small class="text-muted">3 mins ago</small>
+									</p>
+									<p class="card-text shortDescription">{{ article.shortDescription }}</p>
+								</div>
+								{% if is_admin %}
+									<a data-bs-toggle="modal" data-bs-target="#deleteArticleDialog" data-id="{{ article.id }}"
+										class="align-self-start deleteDialog"
+										style="border: none; background-color: #fff; color: #0a58ca; font-size: 20px;">
+										<i class="fa fa-trash-o" aria-hidden="true"></i>
+									</a>
+								{% endif %}
+							</div>
+						</article>
+						<div class="separator separator-dashed border-gray-300 my-8"></div>
+					{% endfor %}
+				</div>
+			</section>
+
+			<nav aria-label="Page navigation example" class="pagination">
+				<ul class="pagination">
+					{% if previous >= 0 %}
+						<li class="page-item">
+							<a class="page-link" href="/?offset={{previous}}">Previous</a>
+						</li>
+					{% endif %}
+					{% if next < count %} 
+						<li class="page-item">
+							<a class="page-link" href="/?offset={{next}}">Next</a>
+						</li>
+					{% endif %}
+				</ul>
+			</nav>
+		</div>
+	</main>
+
+	<div class="modal fade" id="deleteArticleDialog" tabindex="-1" aria-labelledby="exampleModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Delete Article</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure you want to delete this article? this action is irreversable.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<a href="/delete/0" class="btn btn-primary confirmDelete">Delete</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+		<div class="toast-container">
+			{% if app.session.flashbag.has('success') %}
+			{% for notification in app.session.flashbag.get('success') %}
+			<div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive"
+				aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body">
+						{{notification}}
+					</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+						aria-label="Close"></button>
+				</div>
+			</div>
+			{% endfor %}
+			{% endif %}
+			{% if app.session.flashbag.has('error') %}
+			{% for notification in app.session.flashbag.get('error') %}
+			<div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive"
+				aria-atomic="true">
+				<div class="d-flex">
+					<div class="toast-body">
+						{{notification}}
+					</div>
+					<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+						aria-label="Close"></button>
+				</div>
+			</div>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+	$(document).on("click", ".deleteDialog", function () {
+		var Id = $(this).data('id');
+		$(".confirmDelete").attr("href", "/delete/" + Id);
+	});
+
+	$(document).ready(function () {
+		$('.toast').toast('show');
+	});
+
+</script>
+{% endblock %}
