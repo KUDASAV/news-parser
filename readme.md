@@ -5,16 +5,16 @@ A web app for parsing RSS news feeds
 
 Getting started
 ------------
-1. create database
+1. create the database
 ```php bin/console doctrine:database:create```
 
-2. create database tables
+2. create the database tables
 ```php bin/console doctrine:schema:update```
 
 3. create users
 ```php bin/console app:create-user <username> <password> <role>```
 
-4. Start service containers
+4. Start the service containers
 ```docker-compose up -d```
 
 ### Creating the cron job
@@ -33,8 +33,10 @@ Start the cron job processing with: ```bin/console cron:start```
 
 Parsing RSS feeds
 ------------
-The RSS feed streams are fetched from [Wired.com](https://www.wired.com) and loaded into RabbitMQ by the ```src/Command/ParseFeed.php``` console command run every 5 minutes as a cron job. The ```src/Command/ParseFeed.php``` console command fetches the articles, parses them and loads them into our database. 
+The RSS feed streams are fetched from [Wired.com](https://www.wired.com) and loaded into RabbitMQ by the ```src/Command/StartParser.php``` class every 5 minutes.
 
-The cron job to start processing the articles is initiated by the  [Cron Bundle](https://github.com/Cron/Symfony-Bundle) library every 5 minutes and can be initiated manually from the CLI using:
+The ```src/Command/ParseFeed.php``` class fetches the feed urls, parses them and loads them into our database. 
+
+The cron job to start processing the articles is initiated by the [Cron Bundle](https://github.com/Cron/Symfony-Bundle) library and can be initiated manually from the CLI using:
 
 ```php bin/console app:start-parsing```
