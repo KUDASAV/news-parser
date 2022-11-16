@@ -18,6 +18,7 @@ Getting started
 ```docker-compose up -d```
 
 5. Creating the cron job to parse articles
+
 Run: ```bin/console cron:create```
 Set the cron job name e.g. parse-rss
 Set the command to:  ```app:start-parsing```

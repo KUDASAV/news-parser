@@ -25,6 +25,10 @@ RUN docker-php-ext-configure pcntl --enable-pcntl \
     pcntl
 
 WORKDIR /var/www
+
+RUN chmod -R 0777 bin
+RUN chown www-data:www-data /var/www
+RUN chown www-data:www-data /var/www/entrypoint.sh
  
 CMD ["apache2-foreground"]
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
