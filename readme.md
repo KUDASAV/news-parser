@@ -33,9 +33,9 @@ Start the cron job processing with: ```bin/console cron:start```
 
 Parsing RSS feeds
 ------------
-The RSS feed streams are fetched from [Wired.com](https://www.wired.com) and loaded into RabbitMQ by the ```src/Command/StartParser.php``` class every 5 minutes.
+The RSS feed urls from [Wired.com](https://www.wired.com) are loaded into RabbitMQ by the ```src/Command/StartParser.php``` class every 5 minutes.
 
-The ```src/Command/ParseFeed.php``` class fetches the feed urls, parses them and loads them into our database. 
+The ```src/Command/ParseFeed.php``` class fetches the feed urls, parses them and then loads them into our database. 
 
 The cron job to start processing the articles is initiated by the [Cron Bundle](https://github.com/Cron/Symfony-Bundle) library and can be initiated manually from the CLI using:
 
