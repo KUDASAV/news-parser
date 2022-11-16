@@ -36,8 +36,6 @@ services:
     news:
         build: .
         container_name: news
-        volumes:
-            - .:/var/www
         ports:
             - 9900:80
         networks:
@@ -52,8 +50,6 @@ services:
             dockerfile: worker.dockerfile
         container_name: parser1
         command: bash -c "bin/console app:parse-feed"
-        volumes:
-            - .:/var/www
         networks:
             - proxy
         depends_on:
@@ -66,8 +62,6 @@ services:
             dockerfile: worker.dockerfile
         container_name: parser2
         command: bash -c "bin/console app:parse-feed"
-        volumes:
-            - .:/var/www
         networks:
             - proxy
         depends_on:
@@ -80,8 +74,6 @@ services:
             dockerfile: worker.dockerfile
         container_name: parser3
         command: bash -c "bin/console app:parse-feed"
-        volumes:
-            - .:/var/www
         networks:
             - proxy
         depends_on:
